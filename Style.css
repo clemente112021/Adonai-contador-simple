@@ -1,0 +1,73 @@
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+import { FaClock } from 'react-icons/fa';
+
+const SecondsCounter = ({ seconds }) => {
+  // Convertir segundos a string de 6 dígitos con ceros a la izquierda
+  const displaySeconds = String(seconds).padStart(6, '0');
+
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: '#1a1a1a',
+      padding: '10px 20px',
+      borderRadius: '8px'
+    }}>
+      <FaClock size={30} color="white" style={{ marginRight: '15px' }} />
+      {displaySeconds.split('').map((digit, index) => (
+        <div
+          key={index}
+          style={{
+            backgroundColor: '#333',
+            color: 'white',
+            fontSize: '30px',
+            fontFamily: 'Arial, sans-serif',
+            fontWeight: 'bold',
+            width: '40px',
+            height: '50px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0 5px',
+            borderRadius: '5px'
+          }}
+        >
+          {digit}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const App = () => {
+  const [seconds, setSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(true);
+
+  useEffect(() => {
+    let interval;
+    if (isActive) {
+      interval = setInterval(() => {
+        setSeconds(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  return (
+    <div>
+      <SecondsCounter seconds={seconds} />
+      <div style={{ padding: '20px' }}>
+        <button onClick={() => setIsActive(!isActive)}>
+          {isActive ? 'Pause' : 'Resume'}
+        </button>
+        <button onClick={() => setSeconds(0)} style={{ marginLeft: '10px' }}>
+          Reset
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
